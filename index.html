@@ -352,10 +352,10 @@ function startLearning() {
 
 // ========== SLIDES ==========
 const stories = [
-  { emoji: '📖', title: '孔子 — 溫故知新', text: '孔子話：溫習舊知識，可以得到新嘅領悟。', color: '#6C5CE7' },
-  { emoji: '📖', title: '孔子 — 己所不欲', text: '自己唔想嘅事，唔好施加喺別人身上。', color: '#00B894' },
-  { emoji: '📖', title: '華佗 — 麻沸散', text: '華佗發明麻醉藥，減輕病人痛苦。', color: '#E74C3C' },
-  { emoji: '📖', title: '華佗 — 醫者父母心', text: '華佗無論貧富，都盡心醫治病人。', color: '#F39C12' }
+  { img: 'matrix-media-1781542593651-9b410c7f.png', title: '孔子 — 溫故知新', text: '孔子話：溫習舊知識，可以得到新嘅領悟。' },
+  { img: 'matrix-media-1781542588656-7d7bd9c3.png', title: '孔子 — 己所不欲', text: '自己唔想嘅事，唔好施加喺別人身上。' },
+  { img: 'matrix-media-1781542587323-a81dc872.png', title: '華佗 — 麻沸散', text: '華佗發明麻醉藥，減輕病人痛苦。' },
+  { img: 'matrix-media-1781542586250-aa23b170.png', title: '華佗 — 醫者父母心', text: '華佗無論貧富，都盡心醫治病人。' }
 ];
 
 function initSlides() {
@@ -371,7 +371,7 @@ function renderSlide() {
   const el = document.getElementById('slideContent');
   el.innerHTML = `
     <div style="font-size:1.3em;color:#888;margin-bottom:10px;">${state.currentSlide + 1} / ${stories.length}</div>
-    <div class="img-placeholder" style="background:${s.color};height:280px;border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:6em;margin-bottom:24px;">${s.emoji}</div>
+    <img src="${s.img}" alt="${s.title}" style="width:100%;max-width:520px;height:280px;object-fit:cover;border-radius:20px;margin-bottom:24px;border:4px solid var(--purple);" onerror="this.outerHTML='<div style=height:280px;border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:5em;background:#6C5CE7;margin-bottom:24px;>📖</div>'">
     <div style="font-size:2.6em;font-weight:700;color:#1a1a2e;margin-bottom:16px;">${s.title}</div>
     <div class="slide-text">${s.text}</div>
     <button data-tts="${escAttr(s.text)}" onclick="speak(this.getAttribute('data-tts'))" style="margin-top:24px;background:#6C5CE7;color:#fff;border:none;border-radius:16px;padding:14px 28px;font-size:1.4em;">🔊 聽故事</button>
@@ -422,12 +422,12 @@ function initIdiom() {
 
 // ========== WORD LEARN ==========
 const words = [
-  { char: '仁愛', pinyin: 'yan oi', meaning: '關心別人', emoji: '❤️' },
-  { char: '禮貌', pinyin: 'lai maau', meaning: '尊重他人', emoji: '🙏' },
-  { char: '醫德', pinyin: 'yi dak', meaning: '醫生品德', emoji: '💊' },
-  { char: '助人', pinyin: 'zo jan', meaning: '幫助他人', emoji: '🤝' },
-  { char: '學習', pinyin: 'hok zaap', meaning: '溫故知新', emoji: '📖' },
-  { char: '健身', pinyin: 'gin san', meaning: '五禽戲', emoji: '🏃' }
+  { char: '仁愛', pinyin: 'yan oi', meaning: '關心別人', img: 'matrix-media-1781542809085-4f5e95c0.png' },
+  { char: '禮貌', pinyin: 'lai maau', meaning: '尊重他人', img: 'matrix-media-1781542937597-265c235e.png' },
+  { char: '醫德', pinyin: 'yi dak', meaning: '醫生品德', img: 'matrix-media-1781542809314-4c447355.png' },
+  { char: '助人', pinyin: 'zo jan', meaning: '幫助他人', img: 'matrix-media-1781542803712-cfad4e1d.png' },
+  { char: '學習', pinyin: 'hok zaap', meaning: '溫故知新', img: 'matrix-media-1781542909003-6c41f3e8.png' },
+  { char: '健身', pinyin: 'gin san', meaning: '五禽戲', img: 'matrix-media-1781542862798-b6c26be0.png' }
 ];
 
 function initWordLearn() {
@@ -435,7 +435,7 @@ function initWordLearn() {
   const grid = document.getElementById('wordGrid');
   grid.innerHTML = words.map((w, idx) => `
     <div class="hub-card" data-tts="${escAttr(w.char)}" data-idx="${idx}" style="background:#fff;color:#1a1a2e;">
-      <div style="font-size:4em;margin-bottom:10px;">${w.emoji}</div>
+      <img src="${w.img}" alt="${w.char}" style="width:100%;height:140px;object-fit:cover;border-radius:12px;margin-bottom:12px;" onerror="this.style.display='none'">
       <div style="font-size:2.2em;font-weight:700;color:var(--purple);">${w.char}</div>
       <div style="font-size:1.3em;color:#666;">${w.pinyin}</div>
       <div style="margin-top:12px;font-size:1.4em;">${w.meaning}</div>
