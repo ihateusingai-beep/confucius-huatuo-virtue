@@ -111,7 +111,7 @@ input { font-size: 1.6em; padding: 16px 24px; border: 4px solid var(--purple); b
     <div class="home-title">孔子·華佗<br>傳統美德故事</div>
     <p style="font-size:1.5em;margin-bottom:20px;">請輸入你嘅名字</p>
     <input id="studentName" type="text" placeholder="例如：小明" value="小明">
-    <button class="btn btn-gold" onclick="startLearning()" style="width:100%;margin-top:10px;">開始學習 →</button>
+    <button id="startBtn" class="btn btn-gold" style="width:100%;margin-top:10px;">開始學習 →</button>
     <div style="margin-top:30px;font-size:1.1em;opacity:0.7;">多圖少字 · 即時鼓勵 · 金銀銅證書</div>
   </div>
 </div>
@@ -542,6 +542,7 @@ function resetAndReturn() {
 if ('speechSynthesis' in window) {
   speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices();
 }
+document.getElementById('startBtn').addEventListener('click', startLearning);
 updateBadges();
 </script>
 </body>
