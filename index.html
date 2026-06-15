@@ -151,7 +151,7 @@ input { font-size: 1.6em; padding: 16px 24px; border: 4px solid var(--purple); b
         <div class="hub-status" id="hubVocab"></div>
       </div>
       <!-- 評估 -->
-      <div class="hub-card" onclick="goTo('quiz');if(state.quiz.length===0)startQuiz();else renderQuiz();">
+      <div class="hub-card" onclick="enterQuiz();">
         <div class="hub-icon">📝</div>
         <div class="hub-title">小評估</div>
         <div class="hub-desc">24 題 · 3 個程度</div>
@@ -193,7 +193,7 @@ input { font-size: 1.6em; padding: 16px 24px; border: 4px solid var(--purple); b
         <div style="font-size:1.4em;line-height:1.6;">麻沸散救人 · 為貧人醫 · 五禽戲健身 · 醫者父母心</div>
       </div>
     </div>
-    <button class="btn" style="margin:30px auto;display:block;" onclick="updateHubStatus();goTo('hub')">🏠 返回中心</button>
+    <button class="btn" style="margin:30px auto;display:block;" onclick="markIdiomDone();goTo('hub')">🏠 返回中心</button>
   </div>
 </div>
 
@@ -272,9 +272,21 @@ let state = {
   quiz: [],
   quizAnswered: false,
   sentenceWords: [],
+  sentenceIndex: 0,
   completed: { slides: false, idiom: false, sentence: false, vocab: false, quiz: false },
   badges: {}
 };
+
+// ========== HELPERS ==========
+function escAttr(s) {
+  // Escape string for safe use inside an HTML attribute (data-* or onclick)
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
 
 // ========== TTS (zh-HK) ==========
 function speak(text) {
@@ -324,7 +336,7 @@ function renderSlide() {
     <div class="img-placeholder" style="background:${s.color};height:280px;border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:6em;margin-bottom:24px;">${s.emoji}</div>
     <div style="font-size:2.6em;font-weight:700;color:#1a1a2e;margin-bottom:16px;">${s.title}</div>
     <div class="slide-text">${s.text}</div>
-    <button onclick="speak('${s.text}')" style="margin-top:24px;background:#6C5CE7;color:#fff;border:none;border-radius:16px;padding:14px 28px;font-size:1.4em;">🔊 聽故事</button>
+    <button data-tts="${escAttr(s.text)}" onclick="speak(this.getAttribute('data-tts'))" style="margin-top:24px;background:#6C5CE7;color:#fff;border:none;border-radius:16px;padding:14px 28px;font-size:1.4em;">🔊 聽故事</button>
   `;
 }
 
@@ -367,6 +379,20 @@ function startQuiz() {
   goTo('quiz');
 }
 
+function enterQuiz() {
+  if (state.quiz.length === 0) {
+    startQuiz();
+  } else {
+    renderQuiz();
+    goTo('quiz');
+  }
+}
+
+function markIdiomDone() {
+  state.completed.idiom = true;
+  updateHubStatus();
+}
+
 function renderQuiz() {
   const q = state.quiz[state.quizIndex];
   document.getElementById('quizLevel').innerHTML = `<span style="background:#6C5CE7;color:#fff;padding:4px 14px;border-radius:20px;font-size:0.8em;">${q.level}</span>`;
@@ -379,7 +405,7 @@ function renderQuiz() {
     html += `<div class="quiz-opt-row">
       <div class="quiz-opt-label">${['A','B','C'][i]}</div>
       <button class="quiz-opt" onclick="answerQuiz(${i})">${opt}</button>
-      <button class="quiz-tts-btn" onclick="speak('${opt}');return false;">🔊</button>
+      <button class="quiz-tts-btn" data-tts="${escAttr(opt)}" onclick="speak(this.getAttribute('data-tts'));return false;">🔊</button>
     </div>`;
   });
   document.getElementById('quizOptions').innerHTML = html;
@@ -430,7 +456,7 @@ const words = [
 function initWordLearn() {
   const grid = document.getElementById('wordGrid');
   grid.innerHTML = words.map(w => `
-    <div class="hub-card" onclick="speak('${w.char}');this.style.transform='scale(1.08)';setTimeout(()=>this.style.transform='',200)" style="background:#fff;color:#1a1a2e;">
+    <div class="hub-card" data-tts="${escAttr(w.char)}" onclick="speak(this.getAttribute('data-tts'));this.style.transform='scale(1.08)';setTimeout(()=>this.style.transform='',200)" style="background:#fff;color:#1a1a2e;">
       <div style="font-size:4em;margin-bottom:10px;">${w.emoji}</div>
       <div style="font-size:2.2em;font-weight:700;color:var(--purple);">${w.char}</div>
       <div style="font-size:1.3em;color:#666;">${w.pinyin}</div>
@@ -442,40 +468,55 @@ function initWordLearn() {
   updateHubStatus();
 }
 
-// ========== SENTENCE (16 sentences - minimal 4) ==========
+// ========== SENTENCE (8 sentences, cycle through) ==========
 const sentenceData = [
   { words: ['仁愛', '關心', '別人'], answer: '仁愛關心別人' },
-  { words: ['華佗', '幫助', '病人'], answer: '華佗幫助病人' }
+  { words: ['華佗', '幫助', '病人'], answer: '華佗幫助病人' },
+  { words: ['孔子', '教導', '學生'], answer: '孔子教導學生' },
+  { words: ['禮貌', '尊敬', '長輩'], answer: '禮貌尊敬長輩' },
+  { words: ['醫生', '醫治', '病人'], answer: '醫生醫治病人' },
+  { words: ['同學', '互相', '幫忙'], answer: '同學互相幫忙' },
+  { words: ['學習', '溫習', '知識'], answer: '學習溫習知識' },
+  { words: ['五禽戲', '強身', '健體'], answer: '五禽戲強身健體' }
 ];
 
 function initSentence() {
+  if (typeof state.sentenceIndex !== 'number') state.sentenceIndex = 0;
   const container = document.getElementById('sentenceWords');
-  const s = sentenceData[0];
-  container.innerHTML = s.words.map(w => 
-    `<button class="quiz-opt" onclick="addWordToSentence('${w}',this)" style="margin:6px;">${w}</button>`
+  const s = sentenceData[state.sentenceIndex];
+  // 單字 randomize 順序，避免用戶記住位置
+  const shuffled = [...s.words].sort(() => Math.random() - 0.5);
+  container.innerHTML = shuffled.map(w =>
+    `<button class="quiz-opt" onclick="addWordToSentence(this)" data-word="${escAttr(w)}" style="margin:6px;">${w}</button>`
   ).join('');
   document.getElementById('sentenceDisplay').innerHTML = '';
   state.sentenceWords = [];
 }
 
-function addWordToSentence(word, btn) {
+function addWordToSentence(btn) {
   if (btn.classList.contains('used')) return;
+  const word = btn.getAttribute('data-word');
   state.sentenceWords.push(word);
   btn.classList.add('used');
   document.getElementById('sentenceDisplay').innerHTML = state.sentenceWords.join(' ');
 }
 
 function checkSentence() {
-  const s = sentenceData[0];
+  const s = sentenceData[state.sentenceIndex];
   const correct = state.sentenceWords.join(' ') === s.answer;
   if (correct) {
     speak('好正！');
     state.completed.sentence = true;
+    state.sentenceIndex = (state.sentenceIndex + 1) % sentenceData.length;
     updateHubStatus();
     showCelebration('sentence');
     goTo('hub');
   } else {
     speak('再試一次');
+    // 清返已選字畀用戶重試
+    document.querySelectorAll('#sentenceWords .used').forEach(b => b.classList.remove('used'));
+    state.sentenceWords = [];
+    document.getElementById('sentenceDisplay').innerHTML = '';
   }
 }
 
@@ -501,9 +542,25 @@ function updateBadges() {
 }
 
 function showCelebration(activity) {
-  const names = { slides: '美德故事', sentence: '拼句', quiz: '評估' };
-  speak('恭喜完成' + (names[activity] || ''));
-  alert('🎉 ' + (names[activity] || '活動') + ' 完成！做得好！');
+  const names = { slides: '美德故事', sentence: '拼句', quiz: '評估', idiom: '人物詳解' };
+  const label = names[activity] || '活動';
+  speak('恭喜完成' + label);
+  showToast('🎉 ' + label + ' 完成！做得好！');
+}
+
+function showToast(msg, durationMs) {
+  const duration = durationMs || 2200;
+  let toast = document.getElementById('appToast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'appToast';
+    toast.style.cssText = 'position:fixed;top:30px;left:50%;transform:translateX(-50%);background:var(--purple);color:#fff;padding:18px 32px;border-radius:20px;font-size:1.5em;z-index:9999;box-shadow:0 10px 30px rgba(0,0,0,0.4);opacity:0;transition:opacity .25s;pointer-events:none;max-width:90%;text-align:center;';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = msg;
+  requestAnimationFrame(() => { toast.style.opacity = '1'; });
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(() => { toast.style.opacity = '0'; }, duration);
 }
 
 // ========== HUB STATUS ==========
@@ -521,20 +578,23 @@ function updateHubStatus() {
 // ========== DASHBOARD + CERT ==========
 function showCert() {
   const total = state.score;
-  const pct = Math.round((total / 6) * 100);
+  const max = state.quiz.length || quizQuestions.length;
+  const pct = max ? Math.round((total / max) * 100) : 0;
   let level = '銅';
   if (pct >= 85) level = '金';
   else if (pct >= 70) level = '銀';
-  
+
   document.getElementById('certName').textContent = state.name;
-  document.getElementById('certScore').textContent = `${total}/6 分（${level}牌）`;
+  document.getElementById('certScore').textContent = `${total}/${max} 分（${level}牌）`;
   document.getElementById('certDate').textContent = new Date().toLocaleDateString('zh-HK');
   document.getElementById('certBox').style.display = 'block';
-  document.getElementById('scoreDisplay').innerHTML = `總分：${total}/6<br><span style="font-size:0.6em;color:#FFD700;">${level}牌證書</span>`;
+  document.getElementById('scoreDisplay').innerHTML = `總分：${total}/${max}<br><span style="font-size:0.6em;color:#FFD700;">${level}牌證書</span>`;
 }
 
 function resetAndReturn() {
-  state = { name: '', currentSlide: 0, score: 0, quizIndex: 0, quiz: [], quizAnswered: false, sentenceWords: [], completed: { slides: false, idiom: false, sentence: false, vocab: false, quiz: false }, badges: {} };
+  state = { name: '', currentSlide: 0, score: 0, quizIndex: 0, quiz: [], quizAnswered: false, sentenceWords: [], sentenceIndex: 0, completed: { slides: false, idiom: false, sentence: false, vocab: false, quiz: false }, badges: {} };
+  const nameInput = document.getElementById('studentName');
+  if (nameInput) nameInput.value = '';
   goTo('home');
 }
 
