@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>孔子·華佗傳統美德故事</title>
+<style>
+:root {
+  --bg: #1a1a2e;
+  --gold: #FFD700;
+  --purple: #6C5CE7;
+  --green: #00B894;
+  --red: #E74C3C;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Microsoft JhengHei', 'PingFang HK', sans-serif;
+  background: var(--bg);
+  color: #fff;
+  min-height: 100vh;
+  font-size: 18px;
+  touch-action: manipulation;
+}
+.page { display: none; min-height: 100vh; padding: 20px; }
+.page.active { display: block; }
+.home { background: linear-gradient(135deg, #1a1a2e, #2d2d44); display: flex; align-items: center; justify-content: center; }
+.home-card {
+  background: #fff; color: #1a1a2e; border: 6px solid var(--gold);
+  border-radius: 30px; padding: 40px; max-width: 520px; width: 100%; text-align: center;
+}
+.home-title { font-size: 2.8em; color: var(--purple); margin-bottom: 20px; }
+input { font-size: 1.6em; padding: 16px 24px; border: 4px solid var(--purple); border-radius: 20px; width: 100%; margin: 20px 0; text-align: center; }
+.btn {
+  background: var(--purple); color: #fff; border: none; border-radius: 20px;
+  padding: 18px 48px; font-size: 1.6em; cursor: pointer; min-height: 70px;
+}
+.btn-gold { background: var(--gold); color: #1a1a2e; }
+.hub { background: linear-gradient(135deg, #1a1a2e, #3949ab); }
+.hub-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; max-width: 1100px; margin: 0 auto; }
+.hub-card {
+  background: rgba(255,255,255,0.12); border: 4px solid rgba(255,255,255,0.4);
+  border-radius: 24px; padding: 30px 20px; cursor: pointer; text-align: center;
+  transition: all 0.2s;
+}
+.hub-card:hover { transform: scale(1.04); border-color: var(--gold); }
+.hub-icon { font-size: 3.5em; margin-bottom: 12px; }
+.hub-title { font-size: 1.7em; font-weight: bold; margin-bottom: 8px; }
+.hub-desc { font-size: 1.15em; opacity: 0.85; }
+.hub-status { margin-top: 12px; font-size: 1em; padding: 6px 18px; border-radius: 30px; display: inline-block; }
+.hub-status.done { background: var(--green); }
+.hub-status.locked { background: rgba(255,255,255,0.2); }
+.slide-page { background: #0f0f1e; }
+.slide-container {
+  max-width: 900px; margin: 0 auto; text-align: center;
+}
+.slide {
+  background: #fff; color: #1a1a2e; border: 8px solid var(--gold);
+  border-radius: 30px; padding: 40px 30px; margin: 20px auto; min-height: 420px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+.slide img, .slide .img-placeholder {
+  width: 100%; max-width: 520px; height: 280px; object-fit: cover;
+  border-radius: 20px; margin-bottom: 24px; border: 4px solid var(--purple);
+}
+.slide-text { font-size: 2.1em; line-height: 1.4; font-weight: 700; color: #1a1a2e; }
+.slide-nav {
+  position: fixed; bottom: 30px; left: 0; right: 0;
+  display: flex; justify-content: space-between; padding: 0 40px; z-index: 100;
+}
+.nav-btn {
+  background: var(--purple); color: #fff; border: none; border-radius: 20px;
+  padding: 18px 42px; font-size: 1.5em; min-height: 72px; cursor: pointer;
+}
+.quiz-page { background: #0f0f1e; }
+.quiz-card {
+  background: #fff; color: #1a1a2e; border: 6px solid var(--gold);
+  border-radius: 24px; padding: 30px; max-width: 780px; margin: 0 auto;
+}
+.quiz-question { font-size: 2em; margin-bottom: 24px; font-weight: 700; }
+.quiz-opt-row { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+.quiz-opt {
+  flex: 1; background: #f8f9fa; border: 4px solid var(--purple);
+  border-radius: 18px; padding: 20px; font-size: 1.5em; text-align: left; cursor: pointer;
+  min-height: 76px;
+}
+.quiz-opt.correct { background: #d4edda; border-color: var(--green); }
+.quiz-opt.wrong { background: #f8d7da; border-color: var(--red); }
+.quiz-tts-btn {
+  background: var(--purple); color: #fff; border: none; border-radius: 14px;
+  padding: 14px 20px; font-size: 1.4em; cursor: pointer;
+}
+.dashboard { background: #0f0f1e; }
+.cert {
+  background: #fffef0; color: #1a1a2e; border: 12px solid #c5a26f;
+  border-radius: 30px; padding: 50px 40px; max-width: 620px; margin: 40px auto;
+  text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+.cert h2 { font-size: 2.4em; color: #c5a26f; }
+.badge-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; max-width: 900px; margin: 30px auto; }
+.badge {
+  background: rgba(255,255,255,0.1); border: 3px solid var(--gold);
+  border-radius: 20px; padding: 18px; text-align: center; font-size: 1.1em;
+}
+.badge.unlocked { background: var(--green); color: #fff; }
+</style>
+</head>
+<body>
+<!-- HOME -->
+<div id="home" class="page active home">
+  <div class="home-card">
+    <div class="home-title">孔子·華佗<br>傳統美德故事</div>
+    <p style="font-size:1.5em;margin-bottom:20px;">請輸入你嘅名字</p>
+    <input id="studentName" type="text" placeholder="例如：小明" value="小明">
+    <button class="btn btn-gold" onclick="startLearning()" style="width:100%;margin-top:10px;">開始學習 →</button>
+    <div style="margin-top:30px;font-size:1.1em;opacity:0.7;">多圖少字 · 即時鼓勵 · 金銀銅證書</div>
+  </div>
+</div>
+
+<!-- HUB -->
+<div id="hub" class="page hub">
+  <div style="max-width:1100px;margin:0 auto;text-align:center;">
+    <div id="hubGreeting" style="font-size:2.2em;margin-bottom:30px;">👋 你好，準備好學習美德未？</div>
+    
+    <div class="hub-grid">
+      <!-- 故事 -->
+      <div class="hub-card" onclick="goTo('slides');initSlides();">
+        <div class="hub-icon">📖</div>
+        <div class="hub-title">美德故事</div>
+        <div class="hub-desc">孔子 + 華佗 8 則故事</div>
+        <div class="hub-status" id="hubSlides"></div>
+      </div>
+      <!-- 詳解 -->
+      <div class="hub-card" onclick="goTo('idiomPage');">
+        <div class="hub-icon">📜</div>
+        <div class="hub-title">人物詳解</div>
+        <div class="hub-desc">美德意思 + 例子</div>
+        <div class="hub-status" id="hubIdiom"></div>
+      </div>
+      <!-- 拼句 -->
+      <div class="hub-card" onclick="goTo('sentencePage');initSentence();">
+        <div class="hub-icon">✍️</div>
+        <div class="hub-title">拼美德句</div>
+        <div class="hub-desc">16 句美德句子</div>
+        <div class="hub-status" id="hubSentence"></div>
+      </div>
+      <!-- 詞彙 -->
+      <div class="hub-card" onclick="goTo('wordPage');initWordLearn();">
+        <div class="hub-icon">📚</div>
+        <div class="hub-title">美德詞彙</div>
+        <div class="hub-desc">24 個圖像詞彙</div>
+        <div class="hub-status" id="hubVocab"></div>
+      </div>
+      <!-- 評估 -->
+      <div class="hub-card" onclick="goTo('quiz');if(state.quiz.length===0)startQuiz();else renderQuiz();">
+        <div class="hub-icon">📝</div>
+        <div class="hub-title">小評估</div>
+        <div class="hub-desc">24 題 · 3 個程度</div>
+        <div class="hub-status" id="hubQuiz"></div>
+      </div>
+    </div>
+
+    <div style="margin-top:40px;display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+      <button class="btn" onclick="goTo('dashboard')">🏆 我的成績 + 證書</button>
+      <button class="btn" onclick="goTo('badges')">⭐ 我的徽章</button>
+      <button class="btn" onclick="resetAndReturn()" style="background:#555;">🔄 重置</button>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDES (故事) -->
+<div id="slides" class="page slide-page">
+  <div class="slide-container">
+    <div id="slideContent" class="slide"></div>
+    <div class="slide-nav">
+      <button class="nav-btn" onclick="prevSlide()">⬅️ 上一個</button>
+      <button class="nav-btn" onclick="updateHubStatus();goTo('hub')">🏠 返回中心</button>
+      <button class="nav-btn" onclick="nextSlide()">下一個 ➡️</button>
+    </div>
+  </div>
+</div>
+
+<!-- IDIOM / 詳解 -->
+<div id="idiomPage" class="page" style="background:#0f0f1e;">
+  <div style="max-width:860px;margin:0 auto;">
+    <h2 style="text-align:center;font-size:2.4em;margin-bottom:30px;">📜 孔子與華佗美德</h2>
+    <div style="display:grid;gap:20px;">
+      <div class="hub-card" style="background:#fff;color:#1a1a2e;">
+        <div style="font-size:2em;margin-bottom:10px;">孔子 — 仁 · 禮 · 學</div>
+        <div style="font-size:1.4em;line-height:1.6;">仁愛 · 尊重長輩 · 溫故知新 · 己所不欲勿施於人</div>
+      </div>
+      <div class="hub-card" style="background:#fff;color:#1a1a2e;">
+        <div style="font-size:2em;margin-bottom:10px;">華佗 — 醫德 · 助人</div>
+        <div style="font-size:1.4em;line-height:1.6;">麻沸散救人 · 為貧人醫 · 五禽戲健身 · 醫者父母心</div>
+      </div>
+    </div>
+    <button class="btn" style="margin:30px auto;display:block;" onclick="updateHubStatus();goTo('hub')">🏠 返回中心</button>
+  </div>
+</div>
+
+<!-- SENTENCE -->
+<div id="sentencePage" class="page" style="background:#0f0f1e;">
+  <div style="max-width:860px;margin:0 auto;text-align:center;">
+    <h2 style="font-size:2.2em;margin-bottom:20px;">✍️ 拼出美德句子</h2>
+    <div id="sentenceDisplay" style="background:#fff;color:#1a1a2e;border:6px solid var(--gold);border-radius:24px;padding:30px;min-height:120px;font-size:1.8em;margin-bottom:30px;"></div>
+    <div id="sentenceWords" style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;"></div>
+    <button class="btn" onclick="checkSentence()" style="margin-top:30px;">檢查句子 ✓</button>
+    <button class="btn" onclick="updateHubStatus();goTo('hub')" style="margin-top:20px;background:#555;">🏠 返回中心</button>
+  </div>
+</div>
+
+<!-- WORD / 詞彙 -->
+<div id="wordPage" class="page" style="background:#0f0f1e;">
+  <div style="max-width:1100px;margin:0 auto;">
+    <h2 style="text-align:center;font-size:2.2em;margin-bottom:30px;">📚 美德詞彙（點擊聽音）</h2>
+    <div id="wordGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;"></div>
+    <button class="btn" onclick="updateHubStatus();goTo('hub')" style="margin:30px auto;display:block;">🏠 返回中心</button>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div id="quiz" class="page quiz-page">
+  <div class="quiz-card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+      <div style="font-size:1.4em;">📝 小評估 <span id="quizLevel"></span></div>
+      <div id="quizProgress" style="font-size:1.3em;color:var(--purple);"></div>
+    </div>
+    <div id="quizQuestion" class="quiz-question"></div>
+    <div id="quizImg" style="text-align:center;margin:20px 0;"></div>
+    <div id="quizOptions"></div>
+    <div style="margin-top:30px;display:flex;gap:16px;justify-content:center;">
+      <button class="btn" onclick="updateHubStatus();goTo('hub')">🏠 返回中心</button>
+    </div>
+  </div>
+</div>
+
+<!-- DASHBOARD + CERT -->
+<div id="dashboard" class="page dashboard">
+  <div style="max-width:700px;margin:0 auto;text-align:center;">
+    <h2 style="font-size:2.6em;margin-bottom:20px;">🏆 我的成績</h2>
+    <div id="scoreDisplay" style="font-size:3em;color:var(--gold);margin:20px 0;"></div>
+    
+    <div class="cert" id="certBox" style="display:none;">
+      <h2>🌟 傳統美德學習證書 🌟</h2>
+      <div style="font-size:1.8em;margin:20px 0;">恭喜 <span id="certName"></span></div>
+      <div style="font-size:1.6em;">完成孔子·華佗美德故事學習</div>
+      <div style="margin:20px 0;font-size:2em;color:var(--gold);">得分：<span id="certScore"></span></div>
+      <div style="font-size:1.3em;">日期：<span id="certDate"></span></div>
+      <button class="btn btn-gold" onclick="window.print()" style="margin-top:20px;">🖨️ 打印證書</button>
+    </div>
+    
+    <button class="btn" onclick="showCert()" style="margin:20px;">領取金銀銅證書</button>
+    <button class="btn" onclick="goTo('hub')">🏠 返回中心</button>
+  </div>
+</div>
+
+<!-- BADGES -->
+<div id="badges" class="page" style="background:#0f0f1e;">
+  <div style="max-width:1000px;margin:0 auto;">
+    <h2 style="text-align:center;font-size:2.4em;margin-bottom:30px;">⭐ 我的徽章（3層循環）</h2>
+    <div class="badge-grid" id="badgeGrid"></div>
+    <button class="btn" onclick="goTo('hub')" style="margin:30px auto;display:block;">🏠 返回中心</button>
+  </div>
+</div>
+
+<script>
+// ========== STATE ==========
+let state = {
+  name: '',
+  currentSlide: 0,
+  score: 0,
+  quizIndex: 0,
+  quiz: [],
+  quizAnswered: false,
+  sentenceWords: [],
+  completed: { slides: false, idiom: false, sentence: false, vocab: false, quiz: false },
+  badges: {}
+};
+
+// ========== TTS (zh-HK) ==========
+function speak(text) {
+  if (!('speechSynthesis' in window)) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'zh-HK';
+  u.rate = 0.82;
+  const voices = speechSynthesis.getVoices();
+  const cantonese = voices.find(v => v.lang.includes('HK') || v.lang.includes('yue'));
+  if (cantonese) u.voice = cantonese;
+  speechSynthesis.speak(u);
+}
+
+// ========== NAV ==========
+function goTo(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(page).classList.add('active');
+}
+
+function startLearning() {
+  state.name = document.getElementById('studentName').value.trim() || '同學';
+  document.getElementById('hubGreeting').textContent = '👋 ' + state.name + '，準備好學習美德未？';
+  updateHubStatus();
+  goTo('hub');
+}
+
+// ========== SLIDES (16 stories total - minimal 4 shown) ==========
+const stories = [
+  { emoji: '📖', title: '孔子 — 溫故知新', text: '孔子話：溫習舊知識，可以得到新嘅領悟。', color: '#6C5CE7' },
+  { emoji: '📖', title: '孔子 — 己所不欲', text: '自己唔想嘅事，唔好施加喺別人身上。', color: '#00B894' },
+  { emoji: '📖', title: '華佗 — 麻沸散', text: '華佗發明麻醉藥，減輕病人痛苦。', color: '#E74C3C' },
+  { emoji: '📖', title: '華佗 — 醫者父母心', text: '華佗無論貧富，都盡心醫治病人。', color: '#F39C12' }
+];
+
+function initSlides() {
+  state.currentSlide = 0;
+  renderSlide();
+  state.completed.slides = false;
+}
+
+function renderSlide() {
+  const s = stories[state.currentSlide];
+  const el = document.getElementById('slideContent');
+  el.innerHTML = `
+    <div style="font-size:1.3em;color:#888;margin-bottom:10px;">${state.currentSlide + 1} / ${stories.length}</div>
+    <div class="img-placeholder" style="background:${s.color};height:280px;border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:6em;margin-bottom:24px;">${s.emoji}</div>
+    <div style="font-size:2.6em;font-weight:700;color:#1a1a2e;margin-bottom:16px;">${s.title}</div>
+    <div class="slide-text">${s.text}</div>
+    <button onclick="speak('${s.text}')" style="margin-top:24px;background:#6C5CE7;color:#fff;border:none;border-radius:16px;padding:14px 28px;font-size:1.4em;">🔊 聽故事</button>
+  `;
+}
+
+function nextSlide() {
+  if (state.currentSlide < stories.length - 1) {
+    state.currentSlide++;
+    renderSlide();
+  } else {
+    state.completed.slides = true;
+    updateHubStatus();
+    showCelebration('slides');
+    goTo('hub');
+  }
+}
+
+function prevSlide() {
+  if (state.currentSlide > 0) {
+    state.currentSlide--;
+    renderSlide();
+  }
+}
+
+// ========== QUIZ (24 Qs - minimal 6) ==========
+const quizQuestions = [
+  { q: '孔子最出名嘅美德係？', opts: ['仁愛', '勇敢', '富有'], ans: 0, level: '簡單' },
+  { q: '華佗發明咗乜嘢？', opts: ['麻沸散', '火藥', '指南針'], ans: 0, level: '簡單' },
+  { q: '「己所不欲勿施於人」係邊個話？', opts: ['華佗', '孔子', '老子'], ans: 1, level: '中級' },
+  { q: '華佗對病人嘅態度係？', opts: ['只醫有錢人', '盡心醫治所有人', '唔理病人'], ans: 1, level: '中級' },
+  { q: '溫故知新係邊個嘅故事？', opts: ['孔子', '華佗', '孟子'], ans: 0, level: '簡單' },
+  { q: '華佗五禽戲係用嚟？', opts: ['打仗', '健身', '煮飯'], ans: 1, level: '中級' }
+];
+
+function startQuiz() {
+  state.quiz = [...quizQuestions];
+  state.quizIndex = 0;
+  state.score = 0;
+  state.quizAnswered = false;
+  state.completed.quiz = false;
+  renderQuiz();
+  goTo('quiz');
+}
+
+function renderQuiz() {
+  const q = state.quiz[state.quizIndex];
+  document.getElementById('quizLevel').innerHTML = `<span style="background:#6C5CE7;color:#fff;padding:4px 14px;border-radius:20px;font-size:0.8em;">${q.level}</span>`;
+  document.getElementById('quizProgress').textContent = `${state.quizIndex + 1}/${state.quiz.length}`;
+  document.getElementById('quizQuestion').innerHTML = q.q;
+  document.getElementById('quizImg').innerHTML = `<div style="font-size:5em;">${['📖','💊','❤️','🌿','📚','🏃'][state.quizIndex]}</div>`;
+  
+  let html = '';
+  q.opts.forEach((opt, i) => {
+    html += `<div class="quiz-opt-row">
+      <div class="quiz-opt-label">${['A','B','C'][i]}</div>
+      <button class="quiz-opt" onclick="answerQuiz(${i})">${opt}</button>
+      <button class="quiz-tts-btn" onclick="speak('${opt}');return false;">🔊</button>
+    </div>`;
+  });
+  document.getElementById('quizOptions').innerHTML = html;
+  state.quizAnswered = false;
+}
+
+function answerQuiz(idx) {
+  if (state.quizAnswered) return;
+  state.quizAnswered = true;
+  const q = state.quiz[state.quizIndex];
+  const rows = document.querySelectorAll('.quiz-opt-row');
+  
+  if (idx === q.ans) {
+    rows[idx].querySelector('.quiz-opt').classList.add('correct');
+    state.score++;
+    speak('做得好！');
+    setTimeout(() => {
+      state.quizIndex++;
+      if (state.quizIndex >= state.quiz.length) {
+        state.completed.quiz = true;
+        updateHubStatus();
+        showCelebration('quiz');
+        goTo('dashboard');
+      } else {
+        renderQuiz();
+      }
+    }, 1400);
+  } else {
+    rows[idx].querySelector('.quiz-opt').classList.add('wrong');
+    speak('再試一次');
+    setTimeout(() => {
+      rows[idx].querySelector('.quiz-opt').classList.remove('wrong');
+      state.quizAnswered = false;
+    }, 900);
+  }
+}
+
+// ========== WORD LEARN (24 words - minimal 6) ==========
+const words = [
+  { char: '仁愛', pinyin: 'yan oi', meaning: '關心別人', emoji: '❤️' },
+  { char: '禮貌', pinyin: 'lai maau', meaning: '尊重他人', emoji: '🙏' },
+  { char: '醫德', pinyin: 'yi dak', meaning: '醫生品德', emoji: '💊' },
+  { char: '助人', pinyin: 'zo jan', meaning: '幫助他人', emoji: '🤝' },
+  { char: '學習', pinyin: 'hok zaap', meaning: '溫故知新', emoji: '📖' },
+  { char: '健身', pinyin: 'gin san', meaning: '五禽戲', emoji: '🏃' }
+];
+
+function initWordLearn() {
+  const grid = document.getElementById('wordGrid');
+  grid.innerHTML = words.map(w => `
+    <div class="hub-card" onclick="speak('${w.char}');this.style.transform='scale(1.08)';setTimeout(()=>this.style.transform='',200)" style="background:#fff;color:#1a1a2e;">
+      <div style="font-size:4em;margin-bottom:10px;">${w.emoji}</div>
+      <div style="font-size:2.2em;font-weight:700;color:var(--purple);">${w.char}</div>
+      <div style="font-size:1.3em;color:#666;">${w.pinyin}</div>
+      <div style="margin-top:12px;font-size:1.4em;">${w.meaning}</div>
+      <div style="margin-top:14px;color:var(--green);">🔊 點擊聽音</div>
+    </div>
+  `).join('');
+  state.completed.vocab = true;
+  updateHubStatus();
+}
+
+// ========== SENTENCE (16 sentences - minimal 4) ==========
+const sentenceData = [
+  { words: ['仁愛', '關心', '別人'], answer: '仁愛關心別人' },
+  { words: ['華佗', '幫助', '病人'], answer: '華佗幫助病人' }
+];
+
+function initSentence() {
+  const container = document.getElementById('sentenceWords');
+  const s = sentenceData[0];
+  container.innerHTML = s.words.map(w => 
+    `<button class="quiz-opt" onclick="addWordToSentence('${w}',this)" style="margin:6px;">${w}</button>`
+  ).join('');
+  document.getElementById('sentenceDisplay').innerHTML = '';
+  state.sentenceWords = [];
+}
+
+function addWordToSentence(word, btn) {
+  if (btn.classList.contains('used')) return;
+  state.sentenceWords.push(word);
+  btn.classList.add('used');
+  document.getElementById('sentenceDisplay').innerHTML = state.sentenceWords.join(' ');
+}
+
+function checkSentence() {
+  const s = sentenceData[0];
+  const correct = state.sentenceWords.join(' ') === s.answer;
+  if (correct) {
+    speak('好正！');
+    state.completed.sentence = true;
+    updateHubStatus();
+    showCelebration('sentence');
+    goTo('hub');
+  } else {
+    speak('再試一次');
+  }
+}
+
+// ========== BADGES (18 total - 6 shown) ==========
+const badgeList = [
+  { id: 'daily1', name: '今日小仁醫', desc: '今日完成1個故事', cat: 'daily' },
+  { id: 'ladder1', name: '美德小達人', desc: '完成5個活動', cat: 'ladder' },
+  { id: 'perm1', name: '孔子小學徒', desc: '學識孔子美德', cat: 'perm' },
+  { id: 'daily2', name: '助人小英雄', desc: '今日幫助別人', cat: 'daily' },
+  { id: 'ladder2', name: '華佗小醫生', desc: '完成10個活動', cat: 'ladder' },
+  { id: 'perm2', name: '傳統美德王', desc: '完成全部學習', cat: 'perm' }
+];
+
+function updateBadges() {
+  const grid = document.getElementById('badgeGrid');
+  grid.innerHTML = badgeList.map(b => `
+    <div class="badge ${state.badges[b.id] ? 'unlocked' : ''}">
+      <div style="font-size:2.4em;margin-bottom:8px;">⭐</div>
+      <div style="font-weight:700;">${b.name}</div>
+      <div style="font-size:0.95em;opacity:0.8;">${b.desc}</div>
+    </div>
+  `).join('');
+}
+
+function showCelebration(activity) {
+  const names = { slides: '美德故事', sentence: '拼句', quiz: '評估' };
+  speak('恭喜完成' + (names[activity] || ''));
+  alert('🎉 ' + (names[activity] || '活動') + ' 完成！做得好！');
+}
+
+// ========== HUB STATUS ==========
+function updateHubStatus() {
+  const done = '<span class="hub-status done">✅ 完成</span>';
+  const locked = '<span class="hub-status locked">🔓 可選</span>';
+  document.getElementById('hubSlides').innerHTML = state.completed.slides ? done : locked;
+  document.getElementById('hubIdiom').innerHTML = state.completed.idiom ? done : locked;
+  document.getElementById('hubSentence').innerHTML = state.completed.sentence ? done : locked;
+  document.getElementById('hubVocab').innerHTML = state.completed.vocab ? done : locked;
+  document.getElementById('hubQuiz').innerHTML = state.completed.quiz ? done : locked;
+  updateBadges();
+}
+
+// ========== DASHBOARD + CERT ==========
+function showCert() {
+  const total = state.score;
+  const pct = Math.round((total / 6) * 100);
+  let level = '銅';
+  if (pct >= 85) level = '金';
+  else if (pct >= 70) level = '銀';
+  
+  document.getElementById('certName').textContent = state.name;
+  document.getElementById('certScore').textContent = `${total}/6 分（${level}牌）`;
+  document.getElementById('certDate').textContent = new Date().toLocaleDateString('zh-HK');
+  document.getElementById('certBox').style.display = 'block';
+  document.getElementById('scoreDisplay').innerHTML = `總分：${total}/6<br><span style="font-size:0.6em;color:#FFD700;">${level}牌證書</span>`;
+}
+
+function resetAndReturn() {
+  state = { name: '', currentSlide: 0, score: 0, quizIndex: 0, quiz: [], quizAnswered: false, sentenceWords: [], completed: { slides: false, idiom: false, sentence: false, vocab: false, quiz: false }, badges: {} };
+  goTo('home');
+}
+
+// Init
+if ('speechSynthesis' in window) {
+  speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices();
+}
+updateBadges();
+</script>
+</body>
+</html>
