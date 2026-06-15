@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>孔子·華佗 學習流程圖</title>
+<style>
+  :root {
+    --bg: #1a1a2e;
+    --gold: #FFD700;
+    --purple: #6C5CE7;
+    --green: #00B894;
+    --red: #E74C3C;
+    --orange: #F39C12;
+    --card-bg: #252542;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Microsoft JhengHei', 'PingFang HK', sans-serif;
+    background: var(--bg);
+    color: #fff;
+    font-size: 18px;
+    padding: 40px 20px;
+    line-height: 1.6;
+  }
+  h1 { text-align: center; font-size: 2.4em; color: var(--gold); margin-bottom: 8px; }
+  .subtitle { text-align: center; opacity: 0.7; margin-bottom: 48px; font-size: 1.2em; }
+
+  /* ─── FLOW DIAGRAM ─── */
+  .flow {
+    max-width: 1100px;
+    margin: 0 auto 60px;
+    position: relative;
+  }
+
+  .flow-row {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    position: relative;
+    align-items: flex-start;
+  }
+
+  /* VERTICAL CONNECTORS */
+  .flow-row.with-connector-down::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 100%;
+    width: 3px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--purple), transparent);
+    transform: translateX(-50%);
+  }
+
+  .flow-row.with-connector-up::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 100%;
+    width: 3px;
+    height: 40px;
+    background: linear-gradient(to top, var(--purple), transparent);
+    transform: translateX(-50%);
+  }
+
+  /* NODE CARDS */
+  .node {
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 28px 24px;
+    text-align: center;
+    min-width: 180px;
+    max-width: 220px;
+    flex-shrink: 0;
+    border: 3px solid transparent;
+    transition: transform 0.2s, border-color 0.2s;
+    cursor: default;
+  }
+  .node:hover { transform: translateY(-4px); }
+  .node.active { border-color: var(--gold); }
+  .node.start { border-color: var(--green); background: #1a3a2e; }
+  .node.end { border-color: var(--gold); background: #2a2a10; }
+  .node.activity { border-color: var(--purple); }
+  .node.decision { border-color: var(--orange); background: #2a2010; }
+  .node .emoji { font-size: 2.6em; margin-bottom: 8px; }
+  .node .label { font-size: 1.25em; font-weight: 700; margin-bottom: 6px; }
+  .node .sub { font-size: 0.95em; opacity: 0.75; }
+
+  /* ARROWS between nodes */
+  .arrow-h {
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    color: var(--purple);
+    font-size: 1.6em;
+    flex-shrink: 0;
+    min-width: 50px;
+  }
+
+  /* ─── BIFURCATION (HUB branches) ─── */
+  .hub-branches {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    margin: 0 auto;
+    max-width: 1100px;
+  }
+
+  .branch-label {
+    text-align: center;
+    font-size: 1.1em;
+    color: var(--gold);
+    margin: 20px 0 12px;
+    letter-spacing: 0.05em;
+  }
+
+  .branch-row {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
+
+  .branch-card {
+    background: var(--card-bg);
+    border: 2.5px solid rgba(108,92,231,0.5);
+    border-radius: 16px;
+    padding: 18px 16px;
+    min-width: 140px;
+    max-width: 180px;
+    text-align: center;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .branch-card:hover { transform: translateY(-3px); border-color: var(--gold); }
+  .branch-card.done { border-color: var(--green); }
+  .branch-card .emoji { font-size: 2em; margin-bottom: 6px; }
+  .branch-card .name { font-size: 1.1em; font-weight: 700; }
+  .branch-card .req { font-size: 0.85em; opacity: 0.7; margin-top: 4px; }
+
+  .connector-center {
+    text-align: center;
+    width: 100%;
+    margin: 12px 0;
+  }
+  .connector-center .line {
+    width: 3px;
+    height: 24px;
+    background: var(--purple);
+    margin: 0 auto;
+    border-radius: 2px;
+  }
+
+  /* ─── COMPLETION RULES TABLE ─── */
+  .rules-section {
+    max-width: 900px;
+    margin: 0 auto 60px;
+  }
+  .rules-section h2 { font-size: 2em; color: var(--gold); text-align: center; margin-bottom: 28px; }
+  .rules-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .rules-table th {
+    background: var(--purple);
+    padding: 16px 20px;
+    text-align: left;
+    font-size: 1.1em;
+  }
+  .rules-table td {
+    background: var(--card-bg);
+    padding: 16px 20px;
+    border-top: 2px solid rgba(255,255,255,0.06);
+    font-size: 1em;
+  }
+  .rules-table tr:hover td { background: #2d2d4a; }
+  .badge-pass { background: var(--green); color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 0.9em; }
+  .badge-warn { background: var(--orange); color: #1a1a2e; padding: 4px 12px; border-radius: 20px; font-size: 0.9em; }
+  .badge-fail { background: var(--red); color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 0.9em; }
+
+  /* ─── STATE PERSISTENCE ─── */
+  .persist-section {
+    max-width: 800px;
+    margin: 0 auto 60px;
+  }
+  .persist-section h2 { font-size: 2em; color: var(--gold); text-align: center; margin-bottom: 28px; }
+  .persist-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+  }
+  .persist-card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 20px;
+    border-left: 4px solid var(--green);
+  }
+  .persist-card .key { font-size: 1.1em; font-weight: 700; color: var(--gold); margin-bottom: 6px; }
+  .persist-card .desc { font-size: 0.95em; opacity: 0.8; }
+  .persist-card.ls { border-left-color: var(--purple); }
+  .persist-card.mem { border-left-color: var(--orange); }
+
+  /* ─── BADGE UNLOCK TABLE ─── */
+  .badge-section {
+    max-width: 900px;
+    margin: 0 auto 60px;
+  }
+  .badge-section h2 { font-size: 2em; color: var(--gold); text-align: center; margin-bottom: 28px; }
+  .badge-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+  }
+  .badge-card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 18px 20px;
+    border: 2px solid rgba(255,215,0,0.3);
+    transition: transform 0.2s;
+  }
+  .badge-card:hover { transform: translateY(-3px); }
+  .badge-card.unlocked { border-color: var(--gold); background: #2a2a10; }
+  .badge-card .icon { font-size: 2em; margin-bottom: 8px; }
+  .badge-card .name { font-size: 1.2em; font-weight: 700; }
+  .badge-card .condition { font-size: 0.9em; opacity: 0.7; margin-top: 4px; }
+
+  .footer { text-align: center; padding: 40px 0 20px; opacity: 0.5; font-size: 0.9em; }
+</style>
+</head>
+<body>
+
+<h1>🗺️ 學習流程圖</h1>
+<p class="subtitle">孔子·華佗傳統美德故事 SEN Hub — 用戶旅程與完成邏輯</p>
+
+<!-- ═══ MAIN FLOW ═══ -->
+<h2 style="text-align:center;font-size:1.8em;color:var(--purple);margin-bottom:28px;">📍 主流程</h2>
+
+<div class="flow">
+
+  <!-- Row 1: HOME -->
+  <div class="flow-row with-connector-down">
+    <div class="node start">
+      <div class="emoji">🏠</div>
+      <div class="label">首頁</div>
+      <div class="sub">輸入名字<br>點「開始學習」</div>
+    </div>
+  </div>
+
+  <!-- Row 2: HUB -->
+  <div class="flow-row" style="margin-top:20px;">
+    <div class="arrow-h">↓</div>
+  </div>
+  <div class="flow-row with-connector-down">
+    <div class="node active" style="max-width:280px;">
+      <div class="emoji">🎯</div>
+      <div class="label">學習中心</div>
+      <div class="sub">5 個活動入口<br>自由順序探索</div>
+    </div>
+  </div>
+
+  <!-- Row 3: BRANCHES -->
+  <div class="hub-branches">
+    <div class="connector-center"><div class="line"></div></div>
+    <div class="branch-label">↓ 5 條分支（任意順序完成）</div>
+    <div class="branch-row">
+
+      <div class="branch-card">
+        <div class="emoji">📖</div>
+        <div class="name">美德故事</div>
+        <div class="req">✅ 睇晒 4 個故事</div>
+      </div>
+      <div class="branch-card">
+        <div class="emoji">📜</div>
+        <div class="name">人物詳解</div>
+        <div class="req">✅ 點擊一張美德卡</div>
+      </div>
+      <div class="branch-card">
+        <div class="emoji">✍️</div>
+        <div class="name">拼美德句</div>
+        <div class="req">✅ 答啱 1 句</div>
+      </div>
+      <div class="branch-card">
+        <div class="emoji">📚</div>
+        <div class="name">美德詞彙</div>
+        <div class="req">✅ 點擊 3 張詞卡</div>
+      </div>
+      <div class="branch-card">
+        <div class="emoji">📝</div>
+        <div class="name">小評估</div>
+        <div class="req">✅ 答晒 6 題</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Connector down to dashboard -->
+  <div class="flow-row" style="margin-top:16px;">
+    <div class="arrow-h">↓</div>
+  </div>
+  <div class="flow-row" style="gap:40px;flex-wrap:wrap;">
+    <div class="node" style="max-width:240px;">
+      <div class="emoji">🏆</div>
+      <div class="label">我的成績</div>
+      <div class="sub">睇總分<br>領取證書</div>
+    </div>
+    <div class="arrow-h">|</div>
+    <div class="node" style="max-width:240px;">
+      <div class="emoji">⭐</div>
+      <div class="label">我的徽章</div>
+      <div class="sub">按進度自動解鎖<br>6 個徽章</div>
+    </div>
+  </div>
+
+  <!-- Arrow down to reset -->
+  <div class="flow-row" style="margin-top:20px;">
+    <div class="arrow-h">↓</div>
+  </div>
+  <div class="flow-row with-connector-down">
+    <div class="node" style="max-width:280px; border-color: var(--red);">
+      <div class="emoji">🔄</div>
+      <div class="label">重置</div>
+      <div class="sub">⚠️ confirm 確認<br>清除所有進度</div>
+    </div>
+  </div>
+
+  <!-- Back to home -->
+  <div class="flow-row" style="margin-top:20px;">
+    <div class="arrow-h">↺</div>
+  </div>
+  <div class="flow-row">
+    <div class="node start" style="opacity:0.6;">
+      <div class="emoji">🏠</div>
+      <div class="label">首頁</div>
+      <div class="sub">重新輸入名字</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══ COMPLETION RULES TABLE ═══ -->
+<div class="rules-section">
+  <h2>📋 完成條件一覽</h2>
+  <table class="rules-table">
+    <thead>
+      <tr>
+        <th>活動</th>
+        <th>完成條件</th>
+        <th>合理性</th>
+        <th>localStorage</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>📖 美德故事</td>
+        <td>睇晒 4 個故事（睇完自動完成）</td>
+        <td><span class="badge-pass">✅ 合理</span></td>
+        <td>已保存</td>
+      </tr>
+      <tr>
+        <td>📜 人物詳解</td>
+        <td>點擊任意一張美德卡（聽解釋）</td>
+        <td><span class="badge-pass">✅ 合理</span></td>
+        <td>已保存</td>
+      </tr>
+      <tr>
+        <td>✍️ 拼美德句</td>
+        <td>拼啱 1 句（8 句循環）</td>
+        <td><span class="badge-pass">✅ 合理</span></td>
+        <td>已保存</td>
+      </tr>
+      <tr>
+        <td>📚 美德詞彙</td>
+        <td>點擊 3 張詞彙卡（聽發音）</td>
+        <td><span class="badge-pass">✅ 合理</span></td>
+        <td>已保存</td>
+      </tr>
+      <tr>
+        <td>📝 小評估</td>
+        <td>答晒 6 題（每題最多 2 次機會）</td>
+        <td><span class="badge-pass">✅ 合理</span></td>
+        <td>已保存</td>
+      </tr>
+      <tr>
+        <td>🏆 成績/證書</td>
+        <td>按 Quiz 得分計算（≥85%金/≥70%銀/其餘銅）</td>
+        <td><span class="badge-pass">✅ 合理</span></td>
+        <td>已保存</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ═══ STATE PERSISTENCE ═══ -->
+<div class="persist-section">
+  <h2>💾 持久化狀態圖</h2>
+  <p style="text-align:center;opacity:0.7;margin-bottom:24px;">localStorage key: <code style="background:#252542;padding:4px 12px;border-radius:8px;color:var(--gold);">confucius-huatuo-virtue-v1</code></p>
+  <div class="persist-grid">
+    <div class="persist-card ls">
+      <div class="key">name</div>
+      <div class="desc">學生名字（頁面 reload 後保持）</div>
+    </div>
+    <div class="persist-card ls">
+      <div class="key">score</div>
+      <div class="desc">評估總分</div>
+    </div>
+    <div class="persist-card ls">
+      <div class="key">quizIndex</div>
+      <div class="desc">Quiz 做到第幾題</div>
+    </div>
+    <div class="persist-card ls">
+      <div class="key">sentenceIndex</div>
+      <div class="desc">拼句做到第幾句（0-7 循環）</div>
+    </div>
+    <div class="persist-card ls">
+      <div class="key">completed</div>
+      <div class="desc">5 個活動完成狀態</div>
+    </div>
+    <div class="persist-card ls">
+      <div class="key">badges</div>
+      <div class="desc">已解鎖徽章列表</div>
+    </div>
+  </div>
+
+  <div style="margin-top:32px;padding:20px;background:rgba(108,92,231,0.1);border-radius:16px;border:2px solid rgba(108,92,231,0.3);">
+    <div style="font-size:1.2em;font-weight:700;color:var(--purple);margin-bottom:8px;">⚡ 僅存於記憶體（非持久化）</div>
+    <div style="opacity:0.8;">currentSlide · quiz · sentenceWords · vocabClicked · idiomClicked · quizAnswered · quizTries</div>
+    <div style="margin-top:8px;font-size:0.9em;opacity:0.6;">reload 或重置後歸零，由 localStorage 即時還原</div>
+  </div>
+</div>
+
+<!-- ═══ BADGE UNLOCK TABLE ═══ -->
+<div class="badge-section">
+  <h2>⭐ 徽章解鎖條件</h2>
+  <div class="badge-grid">
+    <div class="badge-card">
+      <div class="icon">🏅</div>
+      <div class="name">今日小仁醫</div>
+      <div class="condition">完成美德故事 ✅</div>
+    </div>
+    <div class="badge-card">
+      <div class="icon">🎖️</div>
+      <div class="name">美德小達人</div>
+      <div class="condition">完成 ≥3 個活動</div>
+    </div>
+    <div class="badge-card">
+      <div class="icon">📜</div>
+      <div class="name">孔子小學徒</div>
+      <div class="condition">完成人物詳解 ✅</div>
+    </div>
+    <div class="badge-card">
+      <div class="icon">💪</div>
+      <div class="name">助人小英雄</div>
+      <div class="condition">完成拼美德句 ✅</div>
+    </div>
+    <div class="badge-card">
+      <div class="icon">🏥</div>
+      <div class="name">華佗小醫生</div>
+      <div class="condition">完成 ≥5 個活動</div>
+    </div>
+    <div class="badge-card">
+      <div class="icon">👑</div>
+      <div class="name">傳統美德王</div>
+      <div class="condition">完成全部 5 個活動</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ QUIZ LOGIC DETAIL ═══ -->
+<div style="max-width:700px;margin:0 auto 60px;background:var(--card-bg);border-radius:20px;padding:28px;border-left:5px solid var(--orange);">
+  <h2 style="font-size:1.8em;color:var(--orange);margin-bottom:16px;">📝 評估答題邏輯</h2>
+  <div style="display:grid;gap:12px;">
+    <div style="display:flex;gap:12px;align-items:flex-start;">
+      <span style="background:var(--green);color:#fff;padding:4px 14px;border-radius:20px;font-size:0.85em;flex-shrink:0;">答啱</span>
+      <span>TTS 語音播完 → 1.4s delay → 自動下一題（或去 Dashboard）</span>
+    </div>
+    <div style="display:flex;gap:12px;align-items:flex-start;">
+      <span style="background:var(--red);color:#fff;padding:4px 14px;border-radius:20px;font-size:0.85em;flex-shrink:0;">答錯 1x</span>
+      <span>顯示紅色 → TTS「再試一次」→ 900ms → 可以再試（try=1）</span>
+    </div>
+    <div style="display:flex;gap:12px;align-items:flex-start;">
+      <span style="background:var(--orange);color:#1a1a2e;padding:4px 14px;border-radius:20px;font-size:0.85em;flex-shrink:0;">答錯 2x</span>
+      <span>顯示綠色正確答案 → TTS 讀正確答案 → 2.5s → 自動下一題（不扣分）</span>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  孔子·華佗傳統美德故事 SEN Hub · v2 · 2026<br>
+  教學目標：仁愛 · 禮貌 · 醫德 · 助人 · 學習 · 健身
+</div>
+
+</body>
+</html>
